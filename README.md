@@ -20,7 +20,7 @@
 
   **4. Make code changes**
 
-    At this point, you can make any code changes to the files in the cloned directory.
+   At this point, you can make any code changes to the files in the cloned directory.
 
   **5. Commit changes**
 
