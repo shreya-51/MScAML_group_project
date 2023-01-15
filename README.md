@@ -32,7 +32,7 @@
 
    If it is the first time you are pushing this branch:
    
-    git push origin <name of branch>
+    git push --set-upstream origin <name of branch>
     
    After the first time:
    
