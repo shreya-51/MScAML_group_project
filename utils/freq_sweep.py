@@ -63,8 +63,8 @@ def plot_spectrogram(w1, w2, w3, w4, fs, min_freq, max_freq, sweep_time):
         for j in [0, 1]:
             ax[i, j].set_xlabel('t (sec)')
             ax[i, j].set_ylabel('Frequency (Hz)')
-            ax[i, j].set_xlim(0, 3)
-            ax[i, j].set_ylim(0, 20000)
+            ax[i, j].set_xlim(0, sweep_time)
+            ax[i, j].set_ylim(0, max_freq)
             ax[i, j].grid(True)
     
     ax[0, 0].set_title("Linear Sweep")
