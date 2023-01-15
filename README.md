@@ -26,12 +26,16 @@
 
     git add <path to file>
 
-    git commit
-
-  Then, add a descriptive message in the commit file that describes the code changes you made.
+    git commit -m "<descriptive message that describes the code changes you made>"
 
   **6. Push branch**
 
+   If it is the first time you are pushing this branch:
+   
+    git push origin <name of branch>
+    
+   After the first time:
+   
     git push
 
   Now your changes should be visible in the repository on GitHub.
