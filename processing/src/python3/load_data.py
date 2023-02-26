@@ -2,7 +2,7 @@ import os
 from collections import defaultdict
 import numpy as np
 from scipy.io.wavfile import read, write
-from .encoding import preprocess
+from encoding import preprocess
 import matplotlib.pyplot as plt
 from PIL import Image
 
@@ -24,17 +24,17 @@ def load_data(root_path, img_path):
     return np.array(X), np.array(y)
 
 
-def load_spectrograms(img_paths):
+def load_spectrograms(img_path):
     X = []
     y = []
+    img_paths = os.listdir(img_path)
     for path in img_paths:
         label = (((path.split("/"))[-1]).split("_"))[0]
-        img = np.asarray(Image.open(img_path + path))
-        img = img.resize(img_length, img_width)
+        img = np.asarray((Image.open(img_path + "/" + path).convert('L')).resize((img_width, img_length)))
         X.append(img)
-        y.append(label)
+        y.append(int(label))
     
-    return X, y
+    return np.expand_dims(np.array(X), axis=-1), np.expand_dims(np.array(y), axis=-1)
 
 
 def plot_signal_with_spectrogram(sound, fs):
@@ -53,9 +53,8 @@ def plot_signal_with_spectrogram(sound, fs):
 
 
 if __name__ == "__main__":
-    sounds_path = "/Users/matt/Desktop/MScAML_group_project/processing/dataset/recordings/"
-    img_path = "/Users/matt/Desktop/MScAML_group_project/processing/img_dataset/"
-    X, y = load_data(sounds_path, img_path)
+    img_path = "/Users/matt/Documents/Imperial College London/Modules/Applied Machine Learning Group Project/MScAML_group_project/processing/img_dataset"
+    X, y = load_spectrograms(img_path)
     print(X)
     print(y)
 

@@ -4,13 +4,16 @@
 
 SerialTransfer myTransfer;
 
-int Analog_Input = A0; // Analog output of the sensor
+int micro_0 = A0; // Analog output of the sensor
+int micro_1 = A1;
 int Digital_Input = 3; // Digital output of the sensor
-int microphone_output = 0;
+int microphone0_out = 0;
+int microphone1_out = 0;
 
 
 void setup() {
-  pinMode(Analog_Input, INPUT);
+  pinMode(micro_0, INPUT);
+  pinMode(micro_1, INPUT);
   pinMode(Digital_Input, INPUT);
        
   Serial.begin(9600);  //  Serial output with 9600 bps
@@ -20,14 +23,15 @@ void setup() {
 // and outputs it on the serial output
 void loop()
 {
-  int Analog;
   //int Digital;
     
   //Current values are read out, converted to the voltage value...
-  Analog =  analogRead(Analog_Input);   //*  (5.0 / 1023.0); 
-  //Digital = digitalRead(Digital_Input) ;
-  microphone_output = Analog;
-  Serial.println(microphone_output);
-  
-  delay(10) ;
+  microphone0_out =  analogRead(micro_0); 
+  microphone1_out =  analogRead(micro_1); 
+  //Digital = digitalRead(Digital_Input);
+  Serial.print(microphone0_out);
+  Serial.print(" ");
+  Serial.print(microphone1_out);
+  Serial.println(" ");
+  delay(10);
 }
