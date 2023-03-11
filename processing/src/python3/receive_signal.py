@@ -5,7 +5,7 @@ import cv2
 import numpy as np
 import pandas as pd
 
-usb_port = "/dev/cu.usbmodem1101" # change if the name is different
+usb_port = "/dev/cu.usbmodem1201" # change if the name is different
 num_mics = 4
 sampling_rate = 40000 # Hz
 ser = serial.Serial(usb_port, 57600, timeout=0.001)
@@ -48,7 +48,7 @@ plt.plot(range(1, structured_array.shape[1]), structured_array[3, 1:], linewidth
 plt.ylabel("Voltage (mV)")
 plt.xlabel("Sample")
 plt.grid()
-plt.savefig(f"/Users/matt/Desktop/Acoustic Room - trials/{filename}.jpg")
+plt.savefig(f"/Users/matt/Desktop/Acoustic Room - trials/room1/{filename}.jpg")
 plt.show()
 
 

@@ -1,8 +1,8 @@
 #include "ArduinoBLE.h"
-//#include "SerialTransfer.h"
+#include "SerialTransfer.h"
 #include "pitches.h"
 
-//SerialTransfer myTransfer;
+SerialTransfer myTransfer;
 
 int Analog_Input_0 = A0; // Analog output of the sensor
 int Analog_Input_1 = A1; // Analog output of the sensor
@@ -68,28 +68,28 @@ void setup() {
 // and outputs it on the serial output
 void loop()
 {
-  if (count < 1) {
+  while (count < 1) {
     echo_signal();
     count += 1;
   }
   listen();
 }
 
-//void sweep()
-//{
-//    for (int frequency = 20; frequency <= 5000; frequency += increment) 
-//    {
-//      tone(Digital_Input, frequency, sweepDuration/num_freq);
-//      delay(2);
-//      listen();
-//    }
-//}
+void sweep()
+{
+    for (int frequency = 20; frequency <= 5000; frequency += increment) 
+    {
+      tone(Digital_Input, frequency, sweepDuration/num_freq);
+      delay(2);
+      listen();
+    }
+}
 
 
 void echo_signal() {
   
-  tone(Digital_Input, 100, 1500);
-  listen();
+  tone(Digital_Input, 1000, 1500);
+  //listen();
 }
 
 
