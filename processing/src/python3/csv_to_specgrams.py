@@ -5,8 +5,9 @@ import pandas as pd
 import os
 
 
-def convert_to_spectrograms(path_data):
+def convert_to_spectrograms(path_data, Fs=65536, T=0.0005):
     paths = os.listdir(path_data)
+    n_fft = int(Fs*T)
 
     for path in paths:
         df = pd.read_csv(path_data + path)
@@ -20,7 +21,7 @@ def convert_to_spectrograms(path_data):
             ax.set_axis_off()
             fig.add_axes(ax)
             ax.set_aspect("auto")
-            plt.specgram(mic_out, NFFT=150, Fs=65536, noverlap=100)
+            plt.specgram(mic_out, NFFT=n_fft, Fs=Fs, noverlap=int(n_fft/10))
             plt.savefig(f"data_converted/{name}_micro_{i}_spectrogram.jpg", bbox_inches="tight")
     return
 

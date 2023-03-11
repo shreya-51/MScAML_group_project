@@ -1,8 +1,21 @@
 #include "ArduinoBLE.h"
-//#include "SerialTransfer.h"
+#include "SerialTransfer.h"
 #include "pitches.h"
+#include <arduinoFFT.h>
 
-//SerialTransfer myTransfer;
+#define SAMPLE_RATE 44100 // audio sample rate
+#define BUFFER_SIZE 1024 // audio buffer size
+#define WINDOW_SIZE 256  // window size for STFT
+#define HOP_SIZE 128     // hop size for STFT
+
+arduinoFFT FFT = arduinoFFT();
+
+float audioBuffer[BUFFER_SIZE];
+float window[WINDOW_SIZE];
+float magnitudeSpectrum[WINDOW_SIZE/2 + 1];
+float spectrogram[50][WINDOW_SIZE/2 + 1]; // 50 windows, each with WINDOW_SIZE/2 + 1 frequency bins
+
+SerialTransfer myTransfer;
 
 int Analog_Input_0 = A0; // Analog output of the sensor
 int Analog_Input_1 = A1; // Analog output of the sensor
@@ -14,16 +27,15 @@ int microphone_output_1 = 0;
 int microphone_output_2 = 0;
 int microphone_output_3 = 0;
 int analog_test = A7;
-float start;
 
 int min_frequency = 20;
-int max_frequency = 5000;
-int increment = 10;
+int max_frequency = 20000;
+int increment = 5;
 
 int num_freq = (max_frequency - min_frequency) / increment;
 
 int sweepDuration = 5000; // 5 seconds
-int count = 0;
+int i = 0;
 
 unsigned long myTime1;
 unsigned long myTime2;
@@ -44,12 +56,12 @@ void setup() {
   pinMode(Analog_Input_3, INPUT);
   pinMode(Digital_Input, OUTPUT);
        
-  Serial.begin(57600);  //  Serial output with 9600 bps
+  Serial.begin(9600);  //  Serial output with 9600 bps
 
-  //myTime1 = millis();
-  //sweep();  //send the sweep, should take 3ms
-  //myTime2 = millis();
-  //Serial.println(myTime2 - myTime1);
+  myTime1 = millis();
+  sweep();  //send the sweep, should take 3ms
+  myTime2 = millis();
+  Serial.println(myTime2 - myTime1);
 
 //  myTime4 = millis();
 //  while (myTime3 < threshold)
@@ -68,30 +80,31 @@ void setup() {
 // and outputs it on the serial output
 void loop()
 {
-  if (count < 1) {
-    echo_signal();
-    count += 1;
+  listen();
+  for (int i = 0; i < WINDOW_SIZE; i++) {
+    window[i] = audioBuffer[i] * (0.54 - 0.46 * cos(2 * PI * i / (WINDOW_SIZE - 1)));
   }
-  listen();
-}
-
-//void sweep()
-//{
-//    for (int frequency = 20; frequency <= 5000; frequency += increment) 
-//    {
-//      tone(Digital_Input, frequency, sweepDuration/num_freq);
-//      delay(2);
-//      listen();
-//    }
-//}
-
-
-void echo_signal() {
   
-  tone(Digital_Input, 100, 1500);
-  listen();
+  // compute STFT of audio data
+  for (int i = 0; i < BUFFER_SIZE - WINDOW_SIZE; i += HOP_SIZE) {
+    FFT.Windowing(window);
+    FFT.Compute(window, WINDOW_SIZE);
+    FFT.ComplexToMagnitude(magnitudeSpectrum, WINDOW_SIZE);
+    // add magnitude spectrum to spectrogram matrix
+    for (int j = 0; j < WINDOW_SIZE/2 + 1; j++) {
+      spectrogram[i/HOP_SIZE][j] = magnitudeSpectrum[j];
+    }
+  }
 }
 
+void sweep()
+{
+    for (int frequency = 20; frequency <= 20000; frequency += increment) 
+    {
+      tone(Digital_Input, frequency, sweepDuration/num_freq);
+      delay(sweepDuration/num_freq);
+    }
+}
 
 void listen()
 {
@@ -108,5 +121,4 @@ void listen()
     Serial.print(" ");
     Serial.print(microphone_output_3);
     Serial.println(" ");
-
 }
