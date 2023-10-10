@@ -30,8 +30,8 @@ def convert_audio_to_spectrograms(data_path, out_dir):
 
 
 if __name__ == "__main__":
-    data_path = "/Users/matt/Documents/Imperial College London/Modules/Applied Machine Learning Group Project/MScAML_group_project/utils/data/audio/"
-    out_dir = "/Users/matt/Documents/Imperial College London/Modules/Applied Machine Learning Group Project/MScAML_group_project/utils/data/img/"
+    data_path = "../utils/data/audio/"
+    out_dir = "../utils/data/img/"
     convert_audio_to_spectrograms(data_path, out_dir)
 
 
